@@ -13,7 +13,7 @@
 
 AllocatedLock can be installed by using Swift Package Manager.
 
-**Note:** AllocatedLock requires Swift 5.5 on Xcode 14+. It runs on iOS 13+, tvOS 13+, macOS 10.15+ and Linux.
+**Note:** AllocatedLock requires Swift 5.7 on Xcode 14+. It runs on iOS 13+, tvOS 13+, macOS 10.15+ and Linux.
 
 To install using Swift Package Manager, add this to the `dependencies:` section in your Package.swift file:
 
