@@ -37,12 +37,14 @@
 @available(macOS, deprecated: 13.0, message: "use OSAllocatedUnfairLock directly")
 public struct AllocatedLock<State> {
 
-    private let storage: Storage
+    @usableFromInline
+    let storage: Storage
 
     public init(initialState: State) {
         self.storage = Storage(initialState: initialState)
     }
 
+    @inlinable
     public func withLock<R>(_ body: @Sendable (inout State) throws -> R) rethrows -> R where R: Sendable {
         storage.lock()
         defer { storage.unlock() }
@@ -56,14 +58,17 @@ public extension AllocatedLock where State == Void {
         self.storage = Storage(initialState: ())
     }
 
+    @inlinable
     func lock() {
         storage.lock()
     }
 
+    @inlinable
     func unlock() {
         storage.unlock()
     }
 
+    @inlinable
     func withLock<R>(_ body: @Sendable () throws -> R) rethrows -> R where R: Sendable {
         storage.lock()
         defer { storage.unlock() }
@@ -74,9 +79,12 @@ public extension AllocatedLock where State == Void {
 #if canImport(Darwin)
 @_implementationOnly import os
 
-private extension AllocatedLock {
+extension AllocatedLock {
+    @usableFromInline
     final class Storage {
         private let _lock: os_unfair_lock_t
+
+        @usableFromInline
         var state: State
 
         init(initialState: State) {
@@ -85,10 +93,12 @@ private extension AllocatedLock {
             self.state = initialState
         }
 
+        @usableFromInline
         func lock() {
             os_unfair_lock_lock(_lock)
         }
 
+        @usableFromInline
         func unlock() {
             os_unfair_lock_unlock(_lock)
         }
@@ -103,10 +113,12 @@ private extension AllocatedLock {
 #elseif canImport(Glibc)
 @_implementationOnly import Glibc
 
-private extension AllocatedLock {
+extension AllocatedLock {
+    @usableFromInline
     final class Storage {
         private let _lock: UnsafeMutablePointer<pthread_mutex_t>
 
+        @usableFromInline
         var state: State
 
         init(initialState: State) {
@@ -118,11 +130,13 @@ private extension AllocatedLock {
             self.state = initialState
         }
 
+        @usableFromInline
         func lock() {
             let err = pthread_mutex_lock(_lock)
             precondition(err == 0, "pthread_mutex_lock error: \(err)")
         }
 
+        @usableFromInline
         func unlock() {
             let err = pthread_mutex_unlock(_lock)
             precondition(err == 0, "pthread_mutex_unlock error: \(err)")

@@ -50,6 +50,12 @@ final class AllocatedLockTests: XCTestCase {
         XCTAssertEqual(total, 50005000)
     }
 
+    func testLock_ReturnsValue() async {
+        let lock = AllocatedLock()
+        let value = lock.withLock { true }
+        XCTAssertTrue(value)
+    }
+
     @MainActor
     func testLock_Blocks() async {
         let lock = AllocatedLock()
