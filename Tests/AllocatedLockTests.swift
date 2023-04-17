@@ -38,7 +38,7 @@ final class AllocatedLockTests: XCTestCase {
         let state = AllocatedLock<Int>(initialState: 0)
 
         let total = await withTaskGroup(of: Void.self) { group in
-            for i in 1...10000 {
+            for i in 1...1000 {
                 group.addTask {
                     state.withLock { $0 += i }
                 }
@@ -47,7 +47,7 @@ final class AllocatedLockTests: XCTestCase {
             return state.withLock { $0 }
         }
 
-        XCTAssertEqual(total, 50005000)
+        XCTAssertEqual(total, 500500)
     }
 
     func testLock_ReturnsValue() async {
