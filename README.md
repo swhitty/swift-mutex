@@ -1,6 +1,6 @@
 [![Build](https://github.com/swhitty/FlyingFox/actions/workflows/build.yml/badge.svg)](https://github.com/swhitty/AllocatedLock/actions/workflows/build.yml)
 [![Codecov](https://codecov.io/gh/swhitty/FlyingFox/graphs/badge.svg)](https://codecov.io/gh/swhitty/AllocatedLock)
-[![Platforms](https://img.shields.io/badge/platforms-iOS%20|%20Mac%20|%20tvOS%20|%20Linux%20)](https://github.com/swhitty/AllocatedLock/blob/main/Package.swift)
+[![Platforms](https://img.shields.io/badge/platforms-iOS%20|%20Mac%20|%20tvOS%20|%20Linux%20|%20Windows-lightgray.svg)](https://github.com/swhitty/AllocatedLock/blob/main/Package.swift)
 [![Swift 5.8](https://img.shields.io/badge/swift-5.5%20–%205.8-red.svg?style=flat)](https://developer.apple.com/swift)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://opensource.org/licenses/MIT)
 [![Twitter](https://img.shields.io/badge/twitter-@simonwhitty-blue.svg)](http://twitter.com/simonwhitty)
@@ -13,12 +13,11 @@
 
 AllocatedLock can be installed by using Swift Package Manager.
 
-**Note:** AllocatedLock requires Swift 5.7 on Xcode 14+. It runs on iOS 13+, tvOS 13+, macOS 10.15+ and Linux.
-
+ **Note:** AllocatedLock requires Swift 5.7 on Xcode 14+. It runs on iOS 13+, tvOS 13+, macOS 10.15+, Linux and Windows.
 To install using Swift Package Manager, add this to the `dependencies:` section in your Package.swift file:
 
 ```swift
-.package(url: "https://github.com/swhitty/AllocatedLock.git", .upToNextMajor(from: "0.0.1"))
+.package(url: "https://github.com/swhitty/AllocatedLock.git", .upToNextMajor(from: "0.0.2"))
 ```
 
 # Usage

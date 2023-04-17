@@ -149,4 +149,35 @@ extension AllocatedLock {
         }
     }
 }
+
+#elseif canImport(WinSDK)
+@_implementationOnly import ucrt
+@_implementationOnly import WinSDK
+
+extension AllocatedLock {
+    @usableFromInline
+    final class Storage {
+        private let _lock: UnsafeMutablePointer<SRWLOCK>
+
+        @usableFromInline
+        var state: State
+
+        init(initialState: State) {
+            self._lock = .allocate(capacity: 1)
+            InitializeSRWLock(self._lock)
+            self.state = initialState
+        }
+
+        @usableFromInline
+        func lock() {
+            AcquireSRWLockExclusive(_lock)
+        }
+
+        @usableFromInline
+        func unlock() {
+            ReleaseSRWLockExclusive(_lock)
+        }
+    }
+}
+
 #endif
