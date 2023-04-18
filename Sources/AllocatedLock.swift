@@ -35,7 +35,7 @@
 @available(tvOS, deprecated: 16.0, message: "use OSAllocatedUnfairLock directly")
 @available(watchOS, deprecated: 9, message: "use OSAllocatedUnfairLock directly")
 @available(macOS, deprecated: 13.0, message: "use OSAllocatedUnfairLock directly")
-public struct AllocatedLock<State> {
+public struct AllocatedLock<State>: @unchecked Sendable {
 
     @usableFromInline
     let storage: Storage
