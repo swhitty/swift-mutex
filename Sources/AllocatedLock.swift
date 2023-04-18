@@ -58,12 +58,12 @@ public extension AllocatedLock where State == Void {
         self.storage = Storage(initialState: ())
     }
 
-    @inlinable
+    @inlinable @available(*, noasync)
     func lock() {
         storage.lock()
     }
 
-    @inlinable
+    @inlinable @available(*, noasync)
     func unlock() {
         storage.unlock()
     }

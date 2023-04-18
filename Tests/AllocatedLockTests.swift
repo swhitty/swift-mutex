@@ -59,11 +59,11 @@ final class AllocatedLockTests: XCTestCase {
     @MainActor
     func testLock_Blocks() async {
         let lock = AllocatedLock()
-        lock.lock()
+        lock.unsafeLock()
 
         Task {
             try? await Task.sleep(nanoseconds: 1_000_000_000)
-            lock.unlock()
+            lock.unsafeUnlock()
         }
 
         let results = await withTaskGroup(of: Bool.self) { group in
@@ -72,8 +72,8 @@ final class AllocatedLockTests: XCTestCase {
                 return true
             }
             group.addTask {
-                lock.lock()
-                lock.unlock()
+                lock.unsafeLock()
+                lock.unsafeUnlock()
                 return false
             }
             let first = await group.next()!
@@ -82,4 +82,10 @@ final class AllocatedLockTests: XCTestCase {
         }
         XCTAssertEqual(results, [true, false])
     }
+}
+
+// sidestep warning: unavailable from asynchronous contexts
+extension AllocatedLock where State == Void {
+    func unsafeLock() { lock() }
+    func unsafeUnlock() { unlock() }
 }
