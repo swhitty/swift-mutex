@@ -77,6 +77,7 @@ public extension AllocatedLock where State == Void {
 }
 
 #if canImport(Darwin)
+
 @_implementationOnly import os
 
 extension AllocatedLock {
@@ -111,6 +112,7 @@ extension AllocatedLock {
 }
 
 #elseif canImport(Glibc)
+
 @_implementationOnly import Glibc
 
 extension AllocatedLock {
@@ -151,6 +153,7 @@ extension AllocatedLock {
 }
 
 #elseif canImport(WinSDK)
+
 @_implementationOnly import ucrt
 @_implementationOnly import WinSDK
 
