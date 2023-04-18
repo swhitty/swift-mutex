@@ -7,7 +7,7 @@
 
 # Introduction
 
-**AllocatedLock** is a lightweight cross platform lock with an API compatible with [`OSAllocatedUnfairLock`](https://developer.apple.com/documentation/os/osallocatedunfairlock) available in macOS Ventura, iOS 16 and later.  The lock wraps [`os_unfair_lock_t`](https://developer.apple.com/documentation/os/os_unfair_lock_t) on Darwin platforms and [`pthread_mutex_t`](https://man.freebsd.org/cgi/man.cgi?pthread_mutex_lock(3)) on Linux.
+**AllocatedLock** is a lightweight cross platform lock with an API compatible with [`OSAllocatedUnfairLock`](https://developer.apple.com/documentation/os/osallocatedunfairlock) available in macOS Ventura, iOS 16 and later.  The lock wraps [`os_unfair_lock_t`](https://developer.apple.com/documentation/os/os_unfair_lock_t) on Darwin platforms, [`pthread_mutex_t`](https://man.freebsd.org/cgi/man.cgi?pthread_mutex_lock(3)) on Linux and [`SRWLOCK`](https://learn.microsoft.com/en-us/windows/win32/sync/slim-reader-writer--srw--locks) on Windows.
 
 # Installation
 
