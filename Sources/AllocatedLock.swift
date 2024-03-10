@@ -78,7 +78,10 @@ public extension AllocatedLock where State == Void {
 
 #if canImport(Darwin)
 
-@_implementationOnly import os
+import struct os.os_unfair_lock_t
+import struct os.os_unfair_lock
+import func os.os_unfair_lock_lock
+import func os.os_unfair_lock_unlock
 
 extension AllocatedLock {
     @usableFromInline
