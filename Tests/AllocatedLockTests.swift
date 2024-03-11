@@ -56,15 +56,16 @@ final class AllocatedLockTests: XCTestCase {
         XCTAssertTrue(value)
     }
 
-    @MainActor
     func testLock_Blocks() async {
         let lock = AllocatedLock()
-        lock.unsafeLock()
 
-        Task {
+        Task { @MainActor in
+            lock.unsafeLock()
             try? await Task.sleep(nanoseconds: 1_000_000_000)
             lock.unsafeUnlock()
         }
+
+        try? await Task.sleep(nanoseconds: 500_000)
 
         let results = await withTaskGroup(of: Bool.self) { group in
             group.addTask {

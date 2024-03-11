@@ -31,10 +31,6 @@
 
 // Backports the Swift interface around os_unfair_lock_t available in recent Darwin platforms
 //
-@available(iOS, deprecated: 16.0, message: "use OSAllocatedUnfairLock directly")
-@available(tvOS, deprecated: 16.0, message: "use OSAllocatedUnfairLock directly")
-@available(watchOS, deprecated: 9, message: "use OSAllocatedUnfairLock directly")
-@available(macOS, deprecated: 13.0, message: "use OSAllocatedUnfairLock directly")
 public struct AllocatedLock<State>: @unchecked Sendable {
 
     @usableFromInline
@@ -78,7 +74,10 @@ public extension AllocatedLock where State == Void {
 
 #if canImport(Darwin)
 
-@_implementationOnly import os
+import struct os.os_unfair_lock_t
+import struct os.os_unfair_lock
+import func os.os_unfair_lock_lock
+import func os.os_unfair_lock_unlock
 
 extension AllocatedLock {
     @usableFromInline
