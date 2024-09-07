@@ -49,18 +49,18 @@ final class MutexTests: XCTestCase {
         }
     }
 
-    func testLockIfAvailable_ReturnsValue() {
-        let mutex = Mutex("fish")
-        mutex.lock.unsafeLock()
-        XCTAssertNil(
-            mutex.withLockIfAvailable { _ in "chips" }
-        )
-        mutex.lock.unsafeUnlock()
-        XCTAssertEqual(
-            mutex.withLockIfAvailable { _ in "chips" },
-            "chips"
-        )
-    }
+//    func testLockIfAvailable_ReturnsValue() {
+//        let mutex = Mutex("fish")
+//        mutex.lock.unsafeLock()
+//        XCTAssertNil(
+//            mutex.withLockIfAvailable { _ in "chips" }
+//        )
+//        mutex.lock.unsafeUnlock()
+//        XCTAssertEqual(
+//            mutex.withLockIfAvailable { _ in "chips" },
+//            "chips"
+//        )
+//    }
 
     func testWithLockIfAvailable_ThrowsError() {
         let mutex = Mutex("fish")

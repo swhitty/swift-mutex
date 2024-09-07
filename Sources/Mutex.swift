@@ -30,7 +30,12 @@
 //
 
 // Backports the Swift 6 type Mutex<Value> to all Darwin platforms
-// @available(SwiftStdlib 6.0, deprecated, message: "Use Synchronization.Mutex included with Swift 6")
+
+// @available(macOS, deprecated: 15.0, message: "use Mutex from Synchronization module included with Swift 6")
+// @available(iOS, deprecated: 18.0, message: "use Mutex from Synchronization module included with Swift 6")
+// @available(tvOS, deprecated: 18.0, message: "use Mutex from Synchronization module included with Swift 6")
+// @available(watchOS, deprecated: 11.0, message: "use Mutex from Synchronization module included with Swift 6")
+// @available(visionOS, deprecated: 2.0, message: "use Mutex from Synchronization module included with Swift 6")
 public struct Mutex<Value>: @unchecked Sendable {
     let lock: AllocatedLock<Value> // Compatible with OSAllocatedUnfairLock iOS 16+
 }
@@ -73,6 +78,13 @@ public extension Mutex {
         }
     }
 }
+private struct Transferring<T> {
+    nonisolated(unsafe) var value: T
+
+    init(_ value: T) {
+        self.value = value
+    }
+}
 #else
 public extension Mutex {
     init(_ initialValue: consuming Value) {
@@ -93,17 +105,6 @@ public extension Mutex {
         try lock.withLockIfAvailableUnchecked {
             return try body(&$0)
         }
-    }
-}
-#endif
-
-
-#if compiler(>=6)
-struct Transferring<T> {
-    nonisolated(unsafe) var value: T
-
-    init(_ value: T) {
-        self.value = value
     }
 }
 #endif
