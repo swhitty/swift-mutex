@@ -30,6 +30,7 @@
 //
 
 // Backports the Swift 6 type Mutex<Value> to all Darwin platforms
+// @available(SwiftStdlib 6.0, deprecated, message: "Use Synchronization.Mutex included with Swift 6")
 public struct Mutex<Value>: @unchecked Sendable {
     let lock: AllocatedLock<Value> // Compatible with OSAllocatedUnfairLock iOS 16+
 }
