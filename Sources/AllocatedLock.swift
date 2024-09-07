@@ -1,6 +1,6 @@
 //
 //  AllocatedLock.swift
-//  AllocatedLock
+//  swift-mutex
 //
 //  Created by Simon Whitty on 10/04/2023.
 //  Copyright 2023 Simon Whitty
@@ -8,7 +8,7 @@
 //  Distributed under the permissive MIT license
 //  Get the latest version from here:
 //
-//  https://github.com/swhitty/AllocatedLock
+//  https://github.com/swhitty/swift-mutex
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
