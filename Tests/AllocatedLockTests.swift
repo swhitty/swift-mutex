@@ -29,7 +29,7 @@
 //  SOFTWARE.
 //
 
-@testable import AllocatedLock
+@testable import Mutex
 import XCTest
 
 final class AllocatedLockTests: XCTestCase {
