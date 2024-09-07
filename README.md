@@ -26,7 +26,6 @@ To install using Swift Package Manager, add this to the `dependencies:` section 
 
 Usage is similar to the Swift 6 [`Mutex`](https://developer.apple.com/documentation/synchronization/mutex)
 
-The recommended usage to create a mutex that protects some state:
 ```swift
 let state = Mutex<Int>(0)
 ```
