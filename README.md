@@ -40,6 +40,11 @@ Or mutate the state
 let val = state.withLock { $0 += 1 }
 ```
 
+# Gist
+
+A simpler version compatible with macOS 13 / iOS 16 can be found in [this gist](https://gist.github.com/swhitty/571deb25d84c1954a7a01aafa661496e).
+
+
 # Credits
 
 swift-mutex is primarily the work of [Simon Whitty](https://github.com/swhitty).
