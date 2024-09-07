@@ -19,7 +19,7 @@ The package can be installed by using Swift Package Manager.
 To install using Swift Package Manager, add this to the `dependencies:` section in your Package.swift file:
 
 ```swift
-.package(url: "https://github.com/swhitty/swift-mutex.git", .upToNextMajor(from: "0.0.4"))
+.package(url: "https://github.com/swhitty/swift-mutex.git", .upToNextMajor(from: "0.0.5"))
 ```
 
 # Usage
