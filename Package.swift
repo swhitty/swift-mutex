@@ -3,25 +3,25 @@
 import PackageDescription
 
 let package = Package(
-    name: "AllocatedLock",
+    name: "Mutex",
     platforms: [
  	   .macOS(.v10_15), .iOS(.v13), .tvOS(.v13), .watchOS(.v6)
     ],
     products: [
         .library(
-            name: "AllocatedLock",
-            targets: ["AllocatedLock"]
+            name: "Mutex",
+            targets: ["Mutex"]
         )
     ],
     targets: [
         .target(
-            name: "AllocatedLock",
+            name: "Mutex",
             path: "Sources",
             swiftSettings: .upcomingFeatures
         ),
         .testTarget(
-            name: "AllocatedLockTests",
-            dependencies: ["AllocatedLock"],
+            name: "MutexTests",
+            dependencies: ["Mutex"],
             path: "Tests",
             swiftSettings: .upcomingFeatures
         )
