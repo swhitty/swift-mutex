@@ -4,6 +4,6 @@ set -eu
 
 docker run -it \
   --rm \
-  --mount src="$(pwd)",target=/allocatedLock,type=bind \
-  swift \
-  /usr/bin/swift test --package-path /allocatedLock
+  --mount src="$(pwd)",target=/allocatedlock,type=bind \
+  swiftlang/swift:nightly-6.0-jammy \
+  /usr/bin/swift test --package-path /allocatedlock

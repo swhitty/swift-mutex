@@ -29,14 +29,17 @@
 //  SOFTWARE.
 //
 
-// Backports the Swift interface around os_unfair_lock_t available in recent Darwin platforms
-//
+// Backports the Swift interface around OSAllocatedUnfairLock available in recent Darwin platforms
 public struct AllocatedLock<State>: @unchecked Sendable {
 
     @usableFromInline
     let storage: Storage
 
-    public init(initialState: State) {
+    public init(uncheckedState initialState: State) {
+        self.storage = Storage(initialState: initialState)
+    }
+
+    public init(initialState: State) where State: Sendable {
         self.storage = Storage(initialState: initialState)
     }
 
@@ -46,6 +49,28 @@ public struct AllocatedLock<State>: @unchecked Sendable {
         defer { storage.unlock() }
         return try body(&storage.state)
     }
+
+    @inlinable
+    public func withLockIfAvailable<R>(_ body: @Sendable (inout State) throws -> R) rethrows -> R? where R: Sendable {
+        guard storage.tryLock() else { return nil }
+        defer { storage.unlock() }
+        return try body(&storage.state)
+    }
+
+    @inlinable
+    public func withLockIfAvailableUnchecked<R>(_ body: (inout State) throws -> R) rethrows -> R? {
+        guard storage.tryLock() else { return nil }
+        defer { storage.unlock() }
+        return try body(&storage.state)
+    }
+
+    @inlinable
+    public func withLockUnchecked<R>(_ body: (inout State) throws -> R) rethrows -> R {
+        storage.lock()
+        defer { storage.unlock() }
+        return try body(&storage.state)
+    }
+
 }
 
 public extension AllocatedLock where State == Void {
@@ -60,12 +85,38 @@ public extension AllocatedLock where State == Void {
     }
 
     @inlinable @available(*, noasync)
+    func lockIfAvailable() -> Bool {
+        storage.tryLock()
+    }
+
+    @inlinable @available(*, noasync)
     func unlock() {
         storage.unlock()
     }
 
     @inlinable
     func withLock<R>(_ body: @Sendable () throws -> R) rethrows -> R where R: Sendable {
+        storage.lock()
+        defer { storage.unlock() }
+        return try body()
+    }
+
+    @inlinable
+    func withLockIfAvailable<R>(_ body: @Sendable () throws -> R) rethrows -> R? where R: Sendable {
+        guard storage.tryLock() else { return nil }
+        defer { storage.unlock() }
+        return try body()
+    }
+
+    @inlinable
+    func withLockIfAvailableUnchecked<R>(_ body: () throws -> R) rethrows -> R? {
+        guard storage.tryLock() else { return nil }
+        defer { storage.unlock() }
+        return try body()
+    }
+
+    @inlinable
+    func withLockUnchecked<R>(_ body: () throws -> R) rethrows -> R {
         storage.lock()
         defer { storage.unlock() }
         return try body()
@@ -78,6 +129,7 @@ import struct os.os_unfair_lock_t
 import struct os.os_unfair_lock
 import func os.os_unfair_lock_lock
 import func os.os_unfair_lock_unlock
+import func os.os_unfair_lock_trylock
 
 extension AllocatedLock {
     @usableFromInline
@@ -103,6 +155,11 @@ extension AllocatedLock {
             os_unfair_lock_unlock(_lock)
         }
 
+        @usableFromInline
+        func tryLock() -> Bool {
+            os_unfair_lock_trylock(_lock)
+        }
+
         deinit {
             self._lock.deinitialize(count: 1)
             self._lock.deallocate()
@@ -112,7 +169,7 @@ extension AllocatedLock {
 
 #elseif canImport(Glibc)
 
-@_implementationOnly import Glibc
+import Glibc
 
 extension AllocatedLock {
     @usableFromInline
@@ -143,6 +200,11 @@ extension AllocatedLock {
             precondition(err == 0, "pthread_mutex_unlock error: \(err)")
         }
 
+        @usableFromInline
+        func tryLock() -> Bool {
+            pthread_mutex_trylock(_lock) == 0
+        }
+
         deinit {
             let err = pthread_mutex_destroy(self._lock)
             precondition(err == 0, "pthread_mutex_destroy error: \(err)")
@@ -153,8 +215,8 @@ extension AllocatedLock {
 
 #elseif canImport(WinSDK)
 
-@_implementationOnly import ucrt
-@_implementationOnly import WinSDK
+import ucrt
+import WinSDK
 
 extension AllocatedLock {
     @usableFromInline
@@ -179,6 +241,17 @@ extension AllocatedLock {
         func unlock() {
             ReleaseSRWLockExclusive(_lock)
         }
+
+        @usableFromInline
+        func tryLock() -> Bool {
+            TryAcquireSRWLockExclusive(_lock)
+        }
+
+        @usableFromInline
+        func tryLock() -> Bool {
+            os_unfair_lock_trylock(_lock)
+        }
+
     }
 }
 

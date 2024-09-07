@@ -1,4 +1,4 @@
-// swift-tools-version:5.7
+// swift-tools-version:6.0
 
 import PackageDescription
 
@@ -16,12 +16,23 @@ let package = Package(
     targets: [
         .target(
             name: "AllocatedLock",
-            path: "Sources"
+            path: "Sources",
+            swiftSettings: .upcomingFeatures
         ),
         .testTarget(
             name: "AllocatedLockTests",
             dependencies: ["AllocatedLock"],
-            path: "Tests"
+            path: "Tests",
+            swiftSettings: .upcomingFeatures
         )
     ]
 )
+
+extension Array where Element == SwiftSetting {
+
+    static var upcomingFeatures: [SwiftSetting] {
+        [
+            .swiftLanguageMode(.v6)
+        ]
+    }
+}

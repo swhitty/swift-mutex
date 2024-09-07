@@ -29,7 +29,7 @@
 //  SOFTWARE.
 //
 
-import AllocatedLock
+@testable import AllocatedLock
 import XCTest
 
 final class AllocatedLockTests: XCTestCase {
@@ -84,10 +84,112 @@ final class AllocatedLockTests: XCTestCase {
         }
         XCTAssertEqual(results, [true, false])
     }
+
+    func testTryLock() {
+        let lock = AllocatedLock()
+        let value = lock.withLock { true }
+        XCTAssertTrue(value)
+    }
+
+    func testIfAvailable() {
+        let lock = AllocatedLock(uncheckedState: 5)
+        XCTAssertEqual(
+            lock.withLock { _ in "fish" },
+            "fish"
+        )
+
+        lock.unsafeLock()
+        XCTAssertEqual(
+            lock.withLockIfAvailable { _ in "fish" },
+            String?.none
+        )
+
+        lock.unsafeUnlock()
+        XCTAssertEqual(
+            lock.withLockIfAvailable { _ in "fish" },
+            "fish"
+        )
+    }
+
+    func testIfAvailableUnchecked() {
+        let lock = AllocatedLock(uncheckedState: NonSendable("fish"))
+        XCTAssertEqual(
+            lock.withLockUnchecked { $0 }.name,
+            "fish"
+        )
+
+        lock.unsafeLock()
+        XCTAssertNil(
+            lock.withLockIfAvailableUnchecked { $0 }?.name
+        )
+
+        lock.unsafeUnlock()
+        XCTAssertEqual(
+            lock.withLockIfAvailableUnchecked { $0 }?.name,
+            "fish"
+        )
+    }
+
+    func testVoidIfAvailable() {
+        let lock = AllocatedLock()
+        XCTAssertEqual(
+            lock.withLock { "fish" },
+            "fish"
+        )
+
+        lock.unsafeLock()
+        XCTAssertEqual(
+            lock.withLockIfAvailable { "fish" },
+            String?.none
+        )
+
+        lock.unsafeUnlock()
+        XCTAssertEqual(
+            lock.withLockIfAvailable { "fish" },
+            "fish"
+        )
+    }
+
+    func testVoidIfAvailableUnchecked() {
+        let lock = AllocatedLock()
+        XCTAssertEqual(
+            lock.withLockUnchecked { NonSendable("fish") }.name,
+            "fish"
+        )
+
+        lock.lock()
+        XCTAssertNil(
+            lock.withLockIfAvailableUnchecked { NonSendable("fish") }
+        )
+
+        lock.unlock()
+        XCTAssertEqual(
+            lock.withLockIfAvailableUnchecked { NonSendable("chips") }?.name,
+            "chips"
+        )
+    }
+
+    func testVoidLock() {
+        let lock = AllocatedLock()
+        lock.lock()
+        XCTAssertFalse(lock.lockIfAvailable())
+        lock.unlock()
+        XCTAssertTrue(lock.lockIfAvailable())
+        lock.unlock()
+    }
+}
+
+public final class NonSendable {
+
+    let name: String
+
+    init(_ name: String) {
+        self.name = name
+    }
 }
 
 // sidestep warning: unavailable from asynchronous contexts
-extension AllocatedLock where State == Void {
-    func unsafeLock() { lock() }
-    func unsafeUnlock() { unlock() }
+extension AllocatedLock {
+    func unsafeLock() { storage.lock() }
+    func unsafeUnlock() { storage.unlock() }
 }
