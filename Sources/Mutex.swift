@@ -36,7 +36,7 @@
 // @available(tvOS, deprecated: 18.0, message: "use Mutex from Synchronization module included with Swift 6")
 // @available(watchOS, deprecated: 11.0, message: "use Mutex from Synchronization module included with Swift 6")
 // @available(visionOS, deprecated: 2.0, message: "use Mutex from Synchronization module included with Swift 6")
-public struct Mutex<Value>: @unchecked Sendable {
+public struct Mutex<Value>: Sendable {
     let lock: AllocatedLock<Value> // Compatible with OSAllocatedUnfairLock iOS 16+
 }
 
