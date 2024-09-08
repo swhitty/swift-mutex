@@ -246,12 +246,6 @@ extension AllocatedLock {
         func tryLock() -> Bool {
             TryAcquireSRWLockExclusive(_lock)
         }
-
-        @usableFromInline
-        func tryLock() -> Bool {
-            os_unfair_lock_trylock(_lock)
-        }
-
     }
 }
 
