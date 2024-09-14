@@ -9,7 +9,7 @@
 
 **swift-mutex** is a cross platform lock backporting the Swift 6 [`Mutex`](https://developer.apple.com/documentation/synchronization/mutex) API to Swift 5.9 and all Darwin platforms.
 
-Mutex is built upon AllocatedLock which is cross platform lock with an API compatible with [`OSAllocatedUnfairLock`](https://developer.apple.com/documentation/os/osallocatedunfairlock).  The lock wraps [`os_unfair_lock_t`](https://developer.apple.com/documentation/os/os_unfair_lock_t) on Darwin platforms, [`pthread_mutex_t`](https://man.freebsd.org/cgi/man.cgi?pthread_mutex_lock(3)) on Linux and [`SRWLOCK`](https://learn.microsoft.com/en-us/windows/win32/sync/slim-reader-writer--srw--locks) on Windows.
+Mutex is built upon `AllocatedLock`, a cross platform lock with an API compatible with [`OSAllocatedUnfairLock`](https://developer.apple.com/documentation/os/osallocatedunfairlock).  The lock wraps [`os_unfair_lock_t`](https://developer.apple.com/documentation/os/os_unfair_lock_t) on Darwin platforms, [`pthread_mutex_t`](https://man.freebsd.org/cgi/man.cgi?pthread_mutex_lock(3)) on Linux and [`SRWLOCK`](https://learn.microsoft.com/en-us/windows/win32/sync/slim-reader-writer--srw--locks) on Windows.
 
 # Installation
 
