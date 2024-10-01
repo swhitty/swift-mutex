@@ -167,9 +167,13 @@ extension AllocatedLock {
     }
 }
 
-#elseif canImport(Glibc)
+#elseif canImport(Glibc) || canImport(Musl)
 
+#if canImport(Musl)
+import Musl
+#else
 import Glibc
+#endif
 
 extension AllocatedLock {
     @usableFromInline
