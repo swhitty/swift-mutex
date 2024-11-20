@@ -167,12 +167,14 @@ extension AllocatedLock {
     }
 }
 
-#elseif canImport(Glibc) || canImport(Musl)
+#elseif canImport(Glibc) || canImport(Musl) || canImport(Bionic)
 
 #if canImport(Musl)
 import Musl
-#else
+#elseif canImport(Glibc)
 import Glibc
+#elseif canImport(Bionic)
+import Bionic
 #endif
 
 extension AllocatedLock {
