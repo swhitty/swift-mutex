@@ -35,7 +35,7 @@ Use `.withLock` to acquire the lock to read the state:
 let val = state.withLock { $0 }
 ```
 
-Or mutate the state
+Or mutate the state:
 ```swift
 let val = state.withLock { 
     $0 += 1
