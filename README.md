@@ -37,7 +37,10 @@ let val = state.withLock { $0 }
 
 Or mutate the state
 ```swift
-let val = state.withLock { $0 += 1 }
+let val = state.withLock { 
+    $0 += 1
+    return $0
+}
 ```
 
 # Gist
