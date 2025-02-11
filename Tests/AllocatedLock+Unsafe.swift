@@ -1,9 +1,9 @@
 //
-//  MutexTests.swift
+//  AllocatedLock+Unsafe.swift
 //  swift-mutex
 //
-//  Created by Simon Whitty on 07/09/2024.
-//  Copyright 2024 Simon Whitty
+//  Created by Simon Whitty on 11/02/2025.
+//  Copyright 2025 Simon Whitty
 //
 //  Distributed under the permissive MIT license
 //  Get the latest version from here:
@@ -29,48 +29,10 @@
 //  SOFTWARE.
 //
 
-#if canImport(Testing)
 @testable import Mutex
-import Testing
 
-struct MutexTests {
-
-    @Test
-    func withLock_ReturnsValue() {
-        let mutex = Mutex("fish")
-        let val = mutex.withLock {
-            $0 + " & chips"
-        }
-        #expect(val == "fish & chips")
-    }
-
-    @Test
-    func withLock_ThrowsError() {
-        let mutex = Mutex("fish")
-        #expect(throws: CancellationError.self) {
-            try mutex.withLock { _ -> Void in throw CancellationError() }
-        }
-    }
-
-    @Test
-    func lockIfAvailable_ReturnsValue() {
-        let mutex = Mutex("fish")
-        mutex.lock.unsafeLock()
-        #expect(
-            mutex.withLockIfAvailable { _ in "chips" } == nil
-        )
-        mutex.lock.unsafeUnlock()
-        #expect(
-            mutex.withLockIfAvailable { _ in "chips" } == "chips"
-        )
-    }
-
-    @Test
-    func withLockIfAvailable_ThrowsError() {
-        let mutex = Mutex("fish")
-        #expect(throws: CancellationError.self) {
-            try mutex.withLockIfAvailable { _ -> Void in throw CancellationError() }
-        }
-    }
+// sidestep warning: unavailable from asynchronous contexts
+extension AllocatedLock {
+    func unsafeLock() { storage.lock() }
+    func unsafeUnlock() { storage.unlock() }
 }
-#endif

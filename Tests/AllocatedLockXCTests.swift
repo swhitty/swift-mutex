@@ -1,5 +1,5 @@
 //
-//  AllocatedLockTests.swift
+//  AllocatedLockXCTests.swift
 //  swift-mutex
 //
 //  Created by Simon Whitty on 10/04/2023.
@@ -29,14 +29,13 @@
 //  SOFTWARE.
 //
 
-#if canImport(Testing)
+#if !canImport(Testing)
 @testable import Mutex
-import Testing
+import XCTest
 
-struct AllocatedLockTests {
+final class AllocatedLockTests: XCTestCase {
 
-    @Test
-    func lockState_IsProtected() async {
+    func testLockState_IsProtected() async {
         let state = AllocatedLock<Int>(initialState: 0)
 
         let total = await withTaskGroup(of: Void.self) { group in
@@ -49,18 +48,17 @@ struct AllocatedLockTests {
             return state.withLock { $0 }
         }
 
-        #expect(total == 500500)
+        XCTAssertEqual(total, 500500)
     }
 
-    @Test
-    func lock_ReturnsValue() async {
+    func testLock_ReturnsValue() async {
         let lock = AllocatedLock()
         let value = lock.withLock { true }
-        #expect(value)
+        XCTAssertTrue(value)
     }
 
-    @Test
-    func lock_Blocks() async {
+
+    func testLock_Blocks() async {
         let lock = AllocatedLock()
         await MainActor.run {
             lock.unsafeLock()
@@ -85,95 +83,99 @@ struct AllocatedLockTests {
             let second = await group.next()!
             return [first, second]
         }
-        #expect(results == [true, false])
+        XCTAssertEqual(results, [true, false])
     }
 
-    @Test
-    func tryLock() {
+    func testTryLock() {
         let lock = AllocatedLock()
         let value = lock.withLock { true }
-        #expect(value)
+        XCTAssertTrue(value)
     }
 
-    @Test
-    func ifAvailable() {
+    func testIfAvailable() {
         let lock = AllocatedLock(uncheckedState: 5)
-        #expect(
-            lock.withLock { _ in "fish" } == "fish"
+        XCTAssertEqual(
+            lock.withLock { _ in "fish" },
+            "fish"
         )
 
         lock.unsafeLock()
-        #expect(
-            lock.withLockIfAvailable { _ in "fish" } == nil
+        XCTAssertEqual(
+            lock.withLockIfAvailable { _ in "fish" },
+            String?.none
         )
 
         lock.unsafeUnlock()
-        #expect(
-            lock.withLockIfAvailable { _ in "fish" } == "fish"
+        XCTAssertEqual(
+            lock.withLockIfAvailable { _ in "fish" },
+            "fish"
         )
     }
 
-    @Test
-    func ifAvailableUnchecked() {
+    func testIfAvailableUnchecked() {
         let lock = AllocatedLock(uncheckedState: NonSendable("fish"))
-        #expect(
-            lock.withLockUnchecked { $0 }.name == "fish"
+        XCTAssertEqual(
+            lock.withLockUnchecked { $0 }.name,
+            "fish"
         )
 
         lock.unsafeLock()
-        #expect(
-            lock.withLockIfAvailableUnchecked { $0 }?.name == nil
+        XCTAssertNil(
+            lock.withLockIfAvailableUnchecked { $0 }?.name
         )
 
         lock.unsafeUnlock()
-        #expect(
-            lock.withLockIfAvailableUnchecked { $0 }?.name == "fish"
+        XCTAssertEqual(
+            lock.withLockIfAvailableUnchecked { $0 }?.name,
+            "fish"
         )
     }
 
-    @Test
-    func voidIfAvailable() {
+    func testVoidIfAvailable() {
         let lock = AllocatedLock()
-        #expect(
-            lock.withLock { "fish" } == "fish"
+        XCTAssertEqual(
+            lock.withLock { "fish" },
+            "fish"
         )
 
         lock.unsafeLock()
-        #expect(
-            lock.withLockIfAvailable { "fish" } == nil
+        XCTAssertEqual(
+            lock.withLockIfAvailable { "fish" },
+            String?.none
         )
 
         lock.unsafeUnlock()
-        #expect(
-            lock.withLockIfAvailable { "fish" } == "fish"
+        XCTAssertEqual(
+            lock.withLockIfAvailable { "fish" },
+            "fish"
         )
     }
 
-    @Test
-    func voidIfAvailableUnchecked() {
+    func testVoidIfAvailableUnchecked() {
         let lock = AllocatedLock()
-        #expect(
-            lock.withLockUnchecked { NonSendable("fish") }.name == "fish"
+        XCTAssertEqual(
+            lock.withLockUnchecked { NonSendable("fish") }.name,
+            "fish"
         )
 
         lock.lock()
-        #expect(
-            lock.withLockIfAvailableUnchecked { NonSendable("fish") } == nil
+        XCTAssertNil(
+            lock.withLockIfAvailableUnchecked { NonSendable("fish") }
         )
 
         lock.unlock()
-        #expect(
-            lock.withLockIfAvailableUnchecked { NonSendable("chips") }?.name == "chips"
+        XCTAssertEqual(
+            lock.withLockIfAvailableUnchecked { NonSendable("chips") }?.name,
+            "chips"
         )
     }
 
-    @Test
-    func voidLock() {
+    func testVoidLock() {
         let lock = AllocatedLock()
         lock.lock()
-        #expect(lock.lockIfAvailable() == false)
+        XCTAssertFalse(lock.lockIfAvailable())
         lock.unlock()
-        #expect(lock.lockIfAvailable())
+        XCTAssertTrue(lock.lockIfAvailable())
         lock.unlock()
     }
 }
