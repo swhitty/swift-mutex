@@ -30,6 +30,7 @@
 //
 
 // Backports the Swift interface around OSAllocatedUnfairLock available in recent Darwin platforms
+@available(*, deprecated, message: "Unused by Mutex and will be removed in future versions.")
 public struct AllocatedLock<State>: @unchecked Sendable {
 
     @usableFromInline

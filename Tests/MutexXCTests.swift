@@ -52,11 +52,11 @@ final class MutexTests: XCTestCase {
 
     func testLockIfAvailable_ReturnsValue() {
         let mutex = Mutex("fish")
-        mutex.lock.unsafeLock()
+        mutex.unsafeLock()
         XCTAssertNil(
             mutex.withLockIfAvailable { _ in "chips" }
         )
-        mutex.lock.unsafeUnlock()
+        mutex.unsafeUnlock()
         XCTAssertEqual(
             mutex.withLockIfAvailable { _ in "chips" },
             "chips"
@@ -69,5 +69,10 @@ final class MutexTests: XCTestCase {
             _ = $0 is CancellationError
         }
     }
+}
+
+extension Mutex {
+    func unsafeLock() { storage.lock() }
+    func unsafeUnlock() { storage.unlock() }
 }
 #endif
