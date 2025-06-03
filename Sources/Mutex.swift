@@ -35,12 +35,12 @@
 
 // Backports the Swift 6 type Mutex<Value> to all Darwin platforms
 
-@available(macOS, introduced: 13.0, deprecated: 15.0, message: "use Mutex from Synchronization module")
-@available(iOS, introduced: 16.0, deprecated: 18.0, message: "use Mutex from Synchronization module")
-@available(tvOS, introduced: 18.0, deprecated: 15.0, message: "use Mutex from Synchronization module")
-@available(watchOS, introduced: 11.0, deprecated: 15.0, message: "use Mutex from Synchronization module")
-@available(visionOS, introduced: 2.0, deprecated: 15.0, message: "use Mutex from Synchronization module")
-public struct Mutex<Value: ~Copyable>: @unchecked Sendable, ~Copyable {
+@available(macOS, deprecated: 15.0, message: "use Mutex from Synchronization module")
+@available(iOS, deprecated: 18.0, message: "use Mutex from Synchronization module")
+@available(tvOS, deprecated: 15.0, message: "use Mutex from Synchronization module")
+@available(watchOS, deprecated: 15.0, message: "use Mutex from Synchronization module")
+@available(visionOS, deprecated: 15.0, message: "use Mutex from Synchronization module")
+public struct Mutex<Value: ~Copyable>: ~Copyable {
     let storage: Storage<Value>
 
     public init(_ initialValue: consuming sending Value) {
@@ -63,6 +63,8 @@ public struct Mutex<Value: ~Copyable>: @unchecked Sendable, ~Copyable {
         return try body(&storage.value)
     }
 }
+
+extension Mutex: @unchecked Sendable where Value: ~Copyable { }
 
 #else
 
