@@ -55,11 +55,11 @@ struct MutexTests {
     @Test
     func lockIfAvailable_ReturnsValue() {
         let mutex = Mutex("fish")
-        mutex.lock.unsafeLock()
+        mutex.unsafeLock()
         #expect(
             mutex.withLockIfAvailable { _ in "chips" } == nil
         )
-        mutex.lock.unsafeUnlock()
+        mutex.unsafeUnlock()
         #expect(
             mutex.withLockIfAvailable { _ in "chips" } == "chips"
         )
@@ -72,5 +72,10 @@ struct MutexTests {
             try mutex.withLockIfAvailable { _ -> Void in throw CancellationError() }
         }
     }
+}
+
+extension Mutex {
+    func unsafeLock() { storage.lock() }
+    func unsafeUnlock() { storage.unlock() }
 }
 #endif
