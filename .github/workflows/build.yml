@@ -27,6 +27,20 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage_report.lcov
 
+  xcode_26:
+    runs-on: macos-15
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.0.app/Contents/Developer
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Version
+        run: swift --version
+      - name: Build
+        run: swift build --build-tests
+      - name: Test
+        run: swift test --skip-build
+
   xcode_16_2:
     runs-on: macos-15
     env:
@@ -45,20 +59,6 @@ jobs:
     runs-on: macos-14
     env:
       DEVELOPER_DIR: /Applications/Xcode_15.4.app/Contents/Developer
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Version
-        run: swift --version
-      - name: Build
-        run: swift build --build-tests
-      - name: Test
-        run: swift test
-
-  xcode_15_2:
-    runs-on: macos-14
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_15.2.app/Contents/Developer
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -108,9 +108,9 @@ jobs:
       - name: Test
         run: swift test --skip-build
 
-  linux_swift_5_9:
+  linux_swift_6_2:
     runs-on: ubuntu-latest
-    container: swift:5.9
+    container: swiftlang/swift:nightly-6.2-noble
     steps:
       - name: Checkout
         uses: actions/checkout@v4
