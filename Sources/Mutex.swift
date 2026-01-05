@@ -38,8 +38,8 @@
 @available(macOS, deprecated: 15.0, message: "use Mutex from Synchronization module")
 @available(iOS, deprecated: 18.0, message: "use Mutex from Synchronization module")
 @available(tvOS, deprecated: 15.0, message: "use Mutex from Synchronization module")
-@available(watchOS, deprecated: 15.0, message: "use Mutex from Synchronization module")
-@available(visionOS, deprecated: 15.0, message: "use Mutex from Synchronization module")
+@available(watchOS, deprecated: 11.0, message: "use Mutex from Synchronization module")
+@available(visionOS, deprecated: 2.0, message: "use Mutex from Synchronization module")
 public struct Mutex<Value: ~Copyable>: ~Copyable {
     let storage: Storage<Value>
 
